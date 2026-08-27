@@ -23,6 +23,12 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      host: true,
+      allowedHosts: process.env.REPLIT_DEV_DOMAIN
+        ? [process.env.REPLIT_DEV_DOMAIN]
+        : [],
+    },
   },
   image: {
     // Otimização automática de imagens (WebP/AVIF) via astro:assets
