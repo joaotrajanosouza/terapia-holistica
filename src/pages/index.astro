@@ -1,0 +1,395 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import TestimonialCard from '@components/TestimonialCard.astro';
+import FaqAccordion from '@components/FaqAccordion.astro';
+import ContactForm from '@components/ContactForm.tsx';
+import WhatsappFab from '@components/WhatsappFab.astro';
+import ParallaxLayer from '@components/ParallaxLayer.astro';
+import { SITE, whatsappLink } from '@lib/site';
+import { faqJsonLd } from '@lib/seo';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const testimonials = (await getCollection('testimonials')).sort((a, b) => a.data.order - b.data.order);
+const faqEntries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
+
+const faqForSchema = faqEntries.map((entry) => ({
+  question: entry.data.question,
+  answer: entry.body.trim(),
+}));
+
+// Selos de confiança — qualitativos, não números inventados sobre o negócio.
+const trustBadges = [
+  'Atendimento 100% online',
+  'Sigilo profissional garantido',
+  'São Paulo & São Roque',
+  'Abordagem integrativa',
+  'Linguagem acessível',
+];
+
+// Diferenciais em formato "spec strip" (ícone + frase curta)
+const differentiators = [
+  { label: 'Escuta ativa, sem julgamentos' },
+  { label: 'Ferramentas aplicáveis no dia a dia' },
+  { label: 'Sessões adaptadas ao seu momento' },
+  { label: 'Acompanhamento entre encontros' },
+];
+
+// Os 3 pilares do método, em blocos grandes (padrão inspirado no site de referência)
+const pillars = [
+  {
+    title: 'Acolhimento personalizado',
+    description: 'Cada sessão parte de onde você está agora — sem roteiro genérico, sem pressa.',
+    bullets: [
+      'Escuta ativa e sem julgamentos',
+      'Abordagem adaptada à sua história',
+      'Ambiente seguro para se abrir',
+    ],
+  },
+  {
+    title: 'Ferramentas práticas',
+    description: 'Técnicas de gestão emocional que você aplica no cotidiano, entre uma sessão e outra.',
+    bullets: [
+      'Exercícios de regulação emocional',
+      'Materiais de apoio complementares',
+      'Ajustes conforme sua evolução',
+    ],
+  },
+  {
+    title: 'Jornada contínua',
+    description: 'Terapia não é evento isolado — é processo acompanhado ao longo do tempo.',
+    bullets: [
+      'Revisão periódica de objetivos',
+      'Flexibilidade de frequência',
+      'Suporte entre sessões via WhatsApp',
+    ],
+  },
+];
+
+const audienceTags = [
+  'Ansiedade',
+  'Estresse',
+  'Autoconhecimento',
+  'Relacionamentos',
+  'Bloqueios emocionais',
+  'Momentos de transição',
+  'Produtividade e foco',
+  'Energia e disposição',
+];
+
+const processSteps = [
+  {
+    title: 'Primeiro contato',
+    description: 'Você chama no WhatsApp ou preenche o formulário e conta brevemente o que te trouxe até aqui.',
+  },
+  {
+    title: 'Sessão de acolhimento',
+    description: 'Conversamos sobre seu momento, suas expectativas, e definimos juntos o caminho mais adequado.',
+  },
+  {
+    title: 'Plano personalizado',
+    description: 'Alinhamos abordagem, frequência e formato das sessões de acordo com seu objetivo.',
+  },
+  {
+    title: 'Sessões regulares',
+    description: 'Encontros online guiados, com ferramentas práticas para aplicar entre um encontro e outro.',
+  },
+  {
+    title: 'Acompanhamento contínuo',
+    description: 'Revisamos sua evolução periodicamente e ajustamos o processo ao longo do caminho.',
+  },
+];
+---
+
+<BaseLayout
+  title="Terapia Holística em São Paulo e São Roque | Gestão Emocional"
+  description={SITE.description}
+  path="/"
+  jsonLd={faqJsonLd(faqForSchema)}
+>
+  <Header />
+
+  <main>
+    <!-- HERO: headline + bullets ao lado (padrão do site de referência) -->
+    <section id="hero" class="px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
+      <div class="mx-auto max-w-6xl">
+        <div class="grid gap-10 md:grid-cols-2 md:items-center md:gap-14">
+          <div class="order-2 md:order-1">
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1 text-xs font-medium text-[color:var(--ink-soft)]">
+              <span class="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]"></span>
+              Sessões ao vivo, 100% online
+            </span>
+
+            <h1 class="font-display mt-4 text-[2.5rem] font-semibold leading-[1.05] tracking-tight md:text-5xl">
+              Resgate seu equilíbrio interior e viva com mais leveza
+            </h1>
+
+            <p class="mt-4 max-w-md text-[color:var(--ink-soft)]">
+              Terapia holística e gestão emocional comportamental com {SITE.therapistName}, para
+              quem busca autoconhecimento, superação de bloqueios e mais propósito no dia a dia.
+            </p>
+
+            <ul class="mt-6 flex flex-col gap-2.5 text-sm">
+              {differentiators.slice(0, 3).map((item) => (
+                <li class="flex items-center gap-2.5 text-[color:var(--ink)]">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="shrink-0 text-[color:var(--accent)]" aria-hidden="true">
+                    <path d="M3 8.5l3 3 7-7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#contato"
+                class="rounded-full bg-[color:var(--accent)] px-6 py-3 text-center text-sm font-medium text-white shadow-[var(--shadow-soft)] transition-transform hover:scale-[1.02]"
+              >
+                Agendar minha sessão
+              </a>
+              <a
+                href={whatsappLink("Olá! Gostaria de saber mais sobre Terapia Holística.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="rounded-full border border-[color:var(--border)] px-6 py-3 text-center text-sm font-medium transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+              >
+                Falar no WhatsApp
+              </a>
+            </div>
+          </div>
+
+          <div class="order-1 md:order-2">
+            <div class="relative">
+              <ParallaxLayer speed={0.12} scale class="rounded-3xl border border-[color:var(--border)]">
+                <img
+                  src={SITE.images.hero}
+                  alt="Ambiente acolhedor de terapia holística"
+                  width="640"
+                  height="480"
+                  loading="eager"
+                  fetchpriority="high"
+                  class="aspect-[4/3] w-full object-cover"
+                />
+              </ParallaxLayer>
+              <span class="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 rounded-full bg-[color:var(--surface)] px-3 py-1.5 text-xs font-medium shadow-[var(--shadow-soft)]">
+                🇧🇷 Atendimento em todo o Brasil
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAIXA DE CONFIANÇA: rolagem contínua de selos, no lugar da fita de logos de parceiros -->
+    <div class="overflow-hidden border-y border-[color:var(--border)] bg-[color:var(--bg-alt)] py-4" aria-hidden="true">
+      <div class="trust-track flex w-max gap-10 whitespace-nowrap text-sm font-medium text-[color:var(--ink-soft)]">
+        {[...trustBadges, ...trustBadges, ...trustBadges].map((badge) => (
+          <span class="flex items-center gap-2">
+            <span class="h-1 w-1 rounded-full bg-[color:var(--accent)]"></span>
+            {badge}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- SOBRE + spec-strip de diferenciais -->
+    <section id="sobre" class="reveal px-4 py-16 md:px-6 md:py-24">
+      <div class="mx-auto max-w-6xl">
+        <div class="grid gap-10 md:grid-cols-[220px_1fr] md:items-start md:gap-14">
+          <div class="relative mx-auto h-40 w-40 md:mx-0 md:h-[220px] md:w-[220px]">
+            <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+              <div data-parallax data-speed="0.06" class="h-full w-full">
+                <div class="breathing-ring absolute inset-0"></div>
+              </div>
+            </div>
+            <div class="parallax-wrap relative h-full w-full rounded-full">
+              <div data-parallax data-speed="0.1" class="h-full w-full">
+                <img
+                  src={SITE.images.portrait}
+                  alt={`${SITE.therapistName}, terapeuta holístico`}
+                  width="220"
+                  height="220"
+                  loading="lazy"
+                  class="h-full w-full rounded-full border border-[color:var(--border)] object-cover"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center md:text-left">
+            <p class="font-display text-xs font-semibold uppercase tracking-widest text-[color:var(--accent)]">Sobre</p>
+            <h2 class="font-display mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
+              {SITE.therapistName}
+            </h2>
+            <p class="mt-4 text-[color:var(--ink-soft)]">
+              Terapeuta holístico especializado em gestão emocional comportamental. Minha missão é
+              guiar pessoas a ressignificarem suas dores, superarem bloqueios internos e
+              encontrarem um estado de equilíbrio mental e emocional.
+            </p>
+            <p class="mt-4 text-[color:var(--ink-soft)]">
+              Uma abordagem integrativa que une ferramentas da terapia holística, técnicas de
+              autoconhecimento profundo e inteligência emocional. Atendimento 100% online para
+              {SITE.address.areaServed.join(', ')} e todo o Brasil.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[color:var(--border)] sm:grid-cols-4">
+          {differentiators.map((item) => (
+            <div class="bg-[color:var(--surface)] p-5">
+              <p class="text-sm font-medium leading-snug">{item.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 PILARES: blocos grandes com bullets (padrão "Tablet / Support / Ecosystem") -->
+    <section class="reveal border-y border-[color:var(--border)] bg-[color:var(--bg-alt)] px-4 py-16 md:px-6 md:py-24">
+      <div class="mx-auto max-w-6xl">
+        <p class="font-display text-xs font-semibold uppercase tracking-widest text-[color:var(--accent)]">O método</p>
+        <h2 class="font-display mt-2 max-w-2xl text-3xl font-semibold tracking-tight md:text-4xl">
+          Mais do que sessões. Um processo estruturado de transformação.
+        </h2>
+
+        <div class="mt-12 grid gap-8 md:grid-cols-3 md:gap-6">
+          {pillars.map((pillar) => (
+            <div class="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7">
+              <h3 class="font-display text-xl font-semibold tracking-tight">{pillar.title}</h3>
+              <p class="mt-2 text-sm text-[color:var(--ink-soft)]">{pillar.description}</p>
+              <ul class="mt-5 flex flex-col gap-2.5 border-t border-[color:var(--border)] pt-5 text-sm">
+                {pillar.bullets.map((bullet) => (
+                  <li class="flex items-start gap-2.5">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="mt-0.5 shrink-0 text-[color:var(--accent)]" aria-hidden="true">
+                      <path d="M3 8.5l3 3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    {bullet}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVIÇOS: grade compacta, camada secundária -->
+    <section id="servicos" class="reveal px-4 py-16 md:px-6 md:py-24">
+      <div class="mx-auto max-w-6xl">
+        <p class="font-display text-xs font-semibold uppercase tracking-widest text-[color:var(--accent)]">Serviços</p>
+        <h2 class="font-display mt-2 text-3xl font-semibold tracking-tight md:text-4xl">Caminhos para sua transformação</h2>
+        <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {services.map((service, i) => (
+            <ServiceCard title={service.data.title} summary={service.data.summary} index={i + 1} />
+          ))}
+        </div>
+
+        <!-- TAGS DE PÚBLICO: pílulas, no lugar de "one system, adapted to your location" -->
+        <div class="mt-14 rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-alt)] p-7 md:p-8">
+          <p class="font-display text-sm font-semibold">Para quem é</p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {audienceTags.map((tag) => (
+              <span class="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3.5 py-1.5 text-sm text-[color:var(--ink-soft)]">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAIXA ESCURA DE DESTAQUE: declaração de posicionamento, sem números inventados -->
+    <section class="reveal relative overflow-hidden bg-[color:var(--dark-bg)] px-4 py-16 text-[color:var(--dark-ink)] md:px-6 md:py-24">
+      <div class="parallax-wrap absolute inset-0" aria-hidden="true">
+        <div data-parallax data-speed="-0.05" class="parallax-bg h-full w-full"></div>
+      </div>
+      <div class="relative mx-auto max-w-3xl text-center">
+        <div data-parallax data-speed="0.03">
+          <p class="font-display text-xs font-semibold uppercase tracking-widest text-[color:var(--dark-ink-soft)]">Filosofia</p>
+          <p class="font-display mt-4 text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
+            A terapia não é sobre consertar quem você é. É sobre lembrar quem você sempre foi.
+          </p>
+          <p class="mt-6 text-[color:var(--dark-ink-soft)]">— {SITE.therapistName}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESSO: passos numerados verticais com linha conectora -->
+    <section id="processo" class="reveal px-4 py-16 md:px-6 md:py-24">
+      <div class="mx-auto max-w-2xl">
+        <p class="font-display text-xs font-semibold uppercase tracking-widest text-[color:var(--accent)]">Como funciona</p>
+        <h2 class="font-display mt-2 text-3xl font-semibold tracking-tight md:text-4xl">Da dúvida à primeira sessão</h2>
+
+        <ol class="mt-12 flex flex-col">
+          {processSteps.map((step, i) => (
+            <li class="relative flex gap-5 pb-10 last:pb-0">
+              {i < processSteps.length - 1 && (
+                <span class="step-line absolute left-[19px] top-10 h-full w-px" aria-hidden="true"></span>
+              )}
+              <span class="font-display flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--accent)] bg-[color:var(--surface)] text-sm font-semibold text-[color:var(--accent)]">
+                {i + 1}
+              </span>
+              <div class="pt-1.5">
+                <h3 class="font-display text-lg font-semibold tracking-tight">{step.title}</h3>
+                <p class="mt-1.5 text-sm text-[color:var(--ink-soft)]">{step.description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- DEPOIMENTOS -->
+    <section id="depoimentos" class="reveal border-y border-[color:var(--border)] bg-[color:var(--bg-alt)] px-4 py-16 md:px-6 md:py-24">
+      <div class="mx-auto max-w-6xl">
+        <p class="font-display text-xs font-semibold uppercase tracking-widest text-[color:var(--accent)]">Depoimentos</p>
+        <h2 class="font-display mt-2 text-3xl font-semibold tracking-tight md:text-4xl">Quem já viveu essa transformação</h2>
+        <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {testimonials.map((testimonial) => (
+            <TestimonialCard name={testimonial.data.name} initials={testimonial.data.initials} topic={testimonial.data.topic}>
+              <Fragment set:html={testimonial.body} />
+            </TestimonialCard>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="reveal px-4 py-16 md:px-6 md:py-24">
+      <div class="mx-auto max-w-3xl">
+        <p class="font-display text-xs font-semibold uppercase tracking-widest text-[color:var(--accent)]">FAQ</p>
+        <h2 class="font-display mt-2 text-3xl font-semibold tracking-tight md:text-4xl">Perguntas frequentes</h2>
+        <div class="mt-10">
+          <FaqAccordion items={faqForSchema} />
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato" class="reveal border-t border-[color:var(--border)] bg-[color:var(--bg-alt)] px-4 py-16 md:px-6 md:py-24">
+      <div class="mx-auto max-w-2xl">
+        <p class="font-display text-xs font-semibold uppercase tracking-widest text-[color:var(--accent)]">Contato</p>
+        <h2 class="font-display mt-2 text-3xl font-semibold tracking-tight md:text-4xl">Dê o primeiro passo</h2>
+        <p class="mt-3 text-[color:var(--ink-soft)]">
+          Preencha o formulário abaixo e entrarei em contato para agendarmos sua sessão. Todas as
+          informações são tratadas com confidencialidade.
+        </p>
+        <div class="mt-8 rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 md:p-8">
+          <ContactForm client:visible />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <WhatsappFab />
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { initParallax } from '@lib/parallax';
+
+  initParallax();
+</script>

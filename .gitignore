@@ -1,0 +1,30 @@
+# Build output
+dist/
+
+# Generated types and internal cache
+.astro/
+
+# Package dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local environment variables and keys
+.env
+.env.production
+*.local
+*.secret
+*.token
+
+# IDE and System files
+.DS_Store
+.vscode/
+.idea/
+
+# Local hosting platform folders
+.netlify/
+.vercel/

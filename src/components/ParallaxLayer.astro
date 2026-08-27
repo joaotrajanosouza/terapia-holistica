@@ -1,0 +1,19 @@
+---
+type Props = {
+  speed?: number;
+  scale?: boolean;
+  class?: string;
+};
+
+const { speed = 0.1, scale = false, class: className = '' } = Astro.props;
+---
+
+<div class:list={['parallax-wrap', className]}>
+  <div
+    data-parallax
+    data-speed={speed}
+    class:list={[scale && 'parallax-scale']}
+  >
+    <slot />
+  </div>
+</div>
