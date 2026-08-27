@@ -4,6 +4,8 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
 import WhatsappFab from '@components/WhatsappFab.astro';
+import { blogCollectionJsonLd } from '@lib/seo';
+import { SITE } from '@lib/site';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
@@ -14,25 +16,36 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   title="Blog sobre Terapia Holística e Gestão Emocional"
   description="Artigos e reflexões sobre gestão emocional, ansiedade, autoconhecimento e terapia holística, por Leandro Eduardo Silva."
   path="/blog"
+  image={new URL(SITE.images.hero, SITE.url).toString()}
+  imageAlt="Ambiente acolhedor para terapia holística"
+  jsonLd={blogCollectionJsonLd(posts.map((post) => ({
+    title: post.data.title,
+    description: post.data.description,
+    path: `/blog/${post.slug}`,
+    publishDate: post.data.publishDate,
+  })))}
 >
   <Header />
-  <main class="min-h-[60vh] px-4 py-12 md:px-6 md:py-16">
+  <main transition:animate="slide" class="min-h-[60vh] px-4 py-12 md:px-6 md:py-16">
     <div class="mx-auto max-w-3xl">
       <p class="font-display text-xs font-semibold uppercase tracking-widest text-[color:var(--accent)]">Blog</p>
       <h1 class="font-display mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
         Materiais e reflexões para sua jornada
       </h1>
+      <p class="mt-4 max-w-2xl text-[color:var(--ink-soft)]">
+        Conteúdos práticos para entender suas emoções, cultivar presença e construir uma rotina com mais leveza.
+      </p>
       <ul class="mt-10 flex flex-col gap-4">
         {posts.map((post, i) => (
           <li>
             <a
               href={`/blog/${post.slug}`}
-              class="block rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 transition-shadow hover:shadow-[var(--shadow-lift)]"
+              class="group block rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[color:var(--accent)] hover:shadow-[var(--shadow-lift)]"
             >
               <span class="flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--accent-soft)] text-xs font-semibold text-[color:var(--accent)]">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <span class="font-display mt-3 block text-lg font-semibold tracking-tight md:text-xl">{post.data.title}</span>
+              <span class="font-display mt-3 block text-lg font-semibold tracking-tight transition-colors group-hover:text-[color:var(--accent)] md:text-xl">{post.data.title}</span>
               <p class="mt-2 text-sm text-[color:var(--ink-soft)]">{post.data.description}</p>
               <time datetime={post.data.publishDate.toISOString()} class="mt-3 block text-xs text-[color:var(--ink-soft)]">
                 {post.data.publishDate.toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}

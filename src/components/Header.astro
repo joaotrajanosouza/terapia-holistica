@@ -14,6 +14,7 @@ const nav = [
 
 <header
   id="site-header"
+  transition:persist
   class="sticky top-0 z-40 border-b border-transparent bg-[color:var(--bg)]/90 backdrop-blur-md transition-[border-color,box-shadow] duration-300"
 >
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 md:px-6 md:py-4">
@@ -165,7 +166,10 @@ const nav = [
     );
     sections.forEach((section) => spy.observe(section));
   } else {
-    const active = links.find((link) => link.getAttribute('href') === window.location.pathname);
+    const active = links.find((link) => {
+      const href = link.getAttribute('href');
+      return href === window.location.pathname || (link.dataset.section === 'blog' && window.location.pathname.startsWith('/blog'));
+    });
     if (active) {
       active.dataset.active = 'true';
       moveIndicatorTo(active);

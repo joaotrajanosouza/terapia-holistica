@@ -2,6 +2,7 @@
 import SeoHead from '@components/SeoHead.astro';
 import { localBusinessJsonLd } from '@lib/seo';
 import type { SeoProps } from '@lib/seo';
+import { ClientRouter } from 'astro:transitions';
 import '@styles/global.css';
 
 type Props = SeoProps & {
@@ -23,6 +24,7 @@ const extraJsonLd = Astro.props.jsonLd
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#F7F6F1" />
+    <ClientRouter />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

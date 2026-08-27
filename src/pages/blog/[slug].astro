@@ -5,6 +5,7 @@ import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
 import WhatsappFab from '@components/WhatsappFab.astro';
 import { articleJsonLd, breadcrumbJsonLd } from '@lib/seo';
+import { SITE } from '@lib/site';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -17,6 +18,10 @@ export async function getStaticPaths() {
 type Props = { post: CollectionEntry<'blog'> };
 const { post } = Astro.props;
 const { Content } = await post.render();
+const articleImage = post.data.cover?.src ?? SITE.images.hero;
+const articleImageUrl = new URL(articleImage, SITE.url).toString();
+const publishedTime = post.data.publishDate.toISOString();
+const modifiedTime = (post.data.updatedDate ?? post.data.publishDate).toISOString();
 
 const jsonLd = [
   articleJsonLd({
@@ -25,6 +30,9 @@ const jsonLd = [
     path: `/blog/${post.slug}`,
     publishDate: post.data.publishDate,
     updatedDate: post.data.updatedDate,
+    image: articleImageUrl,
+    imageAlt: post.data.coverAlt ?? post.data.title,
+    tags: post.data.tags,
   }),
   breadcrumbJsonLd([
     { name: 'Início', path: '/' },
@@ -39,19 +47,36 @@ const jsonLd = [
   description={post.data.description}
   path={`/blog/${post.slug}`}
   type="article"
+  image={articleImageUrl}
+  imageAlt={post.data.coverAlt ?? post.data.title}
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  section="Terapia Holística"
+  tags={post.data.tags}
   jsonLd={jsonLd}
 >
   <Header />
-  <main class="px-4 py-12 md:px-6 md:py-16">
+  <main transition:animate="slide" class="px-4 py-12 md:px-6 md:py-16">
     <div class="mx-auto max-w-2xl">
-      <a href="/blog" class="text-sm text-[color:var(--ink-soft)] transition-colors hover:text-[color:var(--accent)]">
+      <a href="/blog" class="inline-flex items-center gap-1 text-sm text-[color:var(--ink-soft)] transition-colors hover:text-[color:var(--accent)]">
         ← Voltar para o blog
       </a>
       <article class="mt-4">
         <h1 class="font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">{post.data.title}</h1>
-        <time datetime={post.data.publishDate.toISOString()} class="mt-2 block text-sm text-[color:var(--ink-soft)]">
+        <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[color:var(--ink-soft)]">
+          <span>Por {SITE.therapistName}</span>
+          <span aria-hidden="true">·</span>
+          <time datetime={publishedTime}>
           {post.data.publishDate.toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </time>
+          </time>
+        </div>
+        {post.data.tags.length > 0 && (
+          <ul class="mt-4 flex flex-wrap gap-2" aria-label="Temas do artigo">
+            {post.data.tags.map((tag) => (
+              <li class="rounded-full bg-[color:var(--accent-soft)] px-3 py-1 text-xs font-medium text-[color:var(--accent)]">{tag}</li>
+            ))}
+          </ul>
+        )}
         <div class="prose prose-neutral prose-headings:font-display prose-headings:tracking-tight prose-a:text-[color:var(--accent)] mt-8 max-w-none">
           <Content />
         </div>
