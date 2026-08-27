@@ -23,12 +23,13 @@ export default function ContactForm() {
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
+  const [whatsappUrl, setWhatsappUrl] = useState('');
 
   function handleWhatsappChange(event: ChangeEvent<HTMLInputElement>) {
     setWhatsapp(formatPhone(event.target.value));
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus('submitting');
     setErrorMsg('');
@@ -64,17 +65,31 @@ export default function ContactForm() {
       payload.email ? `Meu e-mail: ${payload.email}` : 'E-mail: não informado',
     ].join('\n');
 
-    setStatus('success');
+    const url = whatsappLink(message);
+    setWhatsappUrl(url);
     form.reset();
     setWhatsapp('');
-    window.location.assign(whatsappLink(message));
+
+    const openedWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!openedWindow) {
+      setStatus('error');
+      setErrorMsg('O navegador bloqueou a abertura automática. Use o botão abaixo para continuar.');
+      return;
+    }
+
+    setStatus('success');
   }
 
   if (status === 'success') {
     return (
       <div role="status" className="flex items-start gap-3 rounded-2xl border border-[color:var(--accent)] bg-[color:var(--accent-soft)] p-4 text-sm text-[color:var(--ink)]">
         <Check className="mt-0.5 shrink-0 text-[color:var(--accent)]" size={18} strokeWidth={2.4} aria-hidden="true" />
-        <p>Mensagem preparada! Abrindo o WhatsApp para você continuar a conversa.</p>
+        <p>
+          Mensagem preparada! O WhatsApp foi aberto em uma nova aba.
+          <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="ml-1 font-semibold underline underline-offset-2">
+            Abrir novamente
+          </a>
+        </p>
       </div>
     );
   }
@@ -139,9 +154,14 @@ export default function ContactForm() {
       </label>
 
       {status === 'error' && (
-        <p role="alert" className="text-sm text-[color:var(--danger)]">
-          {errorMsg}
-        </p>
+        <div role="alert" className="rounded-2xl border border-[color:var(--danger)]/25 bg-[color:var(--danger)]/5 p-3 text-sm text-[color:var(--danger)]">
+          <p>{errorMsg}</p>
+          {whatsappUrl && (
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex font-semibold underline underline-offset-2">
+              Continuar para o WhatsApp
+            </a>
+          )}
+        </div>
       )}
 
       <button
