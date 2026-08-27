@@ -2,4 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
   "buildCommand": "npm run build"
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 396ddef (Configure Vercel deployment)
