@@ -1,4 +1,6 @@
 ---
+import { Quote } from 'lucide-react';
+
 type Props = {
   name: string;
   initials: string;
@@ -7,7 +9,8 @@ type Props = {
 const { name, initials, topic } = Astro.props;
 ---
 
-<figure class="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6">
+<figure class="group rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]">
+  <Quote className="mb-4 text-[color:var(--terracotta)] transition-transform duration-300 group-hover:scale-110" size={24} strokeWidth={1.7} aria-hidden="true" />
   <blockquote class="text-sm leading-relaxed text-[color:var(--ink)]">
     <slot />
   </blockquote>

@@ -1,4 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { ArrowUpRight, Check, Mail, MessageCircle, UserRound } from 'lucide-react';
+import { whatsappLink } from '@lib/site';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -55,29 +57,25 @@ export default function ContactForm() {
       return;
     }
 
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+    const message = [
+      `Olá, Leandro! Meu nome é ${payload.name}.`,
+      'Gostaria de agendar uma sessão.',
+      `Meu WhatsApp: ${payload.whatsapp}`,
+      payload.email ? `Meu e-mail: ${payload.email}` : 'E-mail: não informado',
+    ].join('\n');
 
-      if (!response.ok) throw new Error('request_failed');
-
-      setStatus('success');
-      form.reset();
-      setWhatsapp('');
-    } catch {
-      setStatus('error');
-      setErrorMsg('Não foi possível enviar agora. Tente novamente ou chame no WhatsApp.');
-    }
+    setStatus('success');
+    form.reset();
+    setWhatsapp('');
+    window.location.assign(whatsappLink(message));
   }
 
   if (status === 'success') {
     return (
-      <p role="status" className="rounded-2xl border border-[color:var(--accent)] bg-[color:var(--accent-soft)] p-4 text-sm text-[color:var(--ink)]">
-        Recebi sua solicitação! Vou responder em breve pelo WhatsApp ou e-mail informado.
-      </p>
+      <div role="status" className="flex items-start gap-3 rounded-2xl border border-[color:var(--accent)] bg-[color:var(--accent-soft)] p-4 text-sm text-[color:var(--ink)]">
+        <Check className="mt-0.5 shrink-0 text-[color:var(--accent)]" size={18} strokeWidth={2.4} aria-hidden="true" />
+        <p>Mensagem preparada! Abrindo o WhatsApp para você continuar a conversa.</p>
+      </div>
     );
   }
 
@@ -94,19 +92,25 @@ export default function ContactForm() {
         className="absolute left-[-9999px] h-0 w-0 opacity-0"
       />
 
-      <label className="flex flex-col gap-1 text-sm text-[color:var(--ink-soft)]">
-        Seu nome
+      <label className="group flex flex-col gap-1.5 text-sm text-[color:var(--ink-soft)]">
+        <span className="flex items-center gap-2 font-medium text-[color:var(--ink)]">
+          <UserRound size={16} strokeWidth={1.8} aria-hidden="true" />
+          Seu nome
+        </span>
         <input
           type="text"
           name="name"
           required
           autoComplete="name"
-          className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--ink)] outline-none transition-colors focus:border-[color:var(--accent)]"
+          className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3.5 text-[color:var(--ink)] outline-none transition-all placeholder:text-[color:var(--ink-soft)]/60 focus:border-[color:var(--accent)] focus:shadow-[0_0_0_4px_var(--accent-soft)]"
         />
       </label>
 
-      <label className="flex flex-col gap-1 text-sm text-[color:var(--ink-soft)]">
-        Seu WhatsApp
+      <label className="group flex flex-col gap-1.5 text-sm text-[color:var(--ink-soft)]">
+        <span className="flex items-center gap-2 font-medium text-[color:var(--ink)]">
+          <MessageCircle size={16} strokeWidth={1.8} aria-hidden="true" />
+          Seu WhatsApp
+        </span>
         <input
           type="tel"
           name="whatsapp"
@@ -117,17 +121,20 @@ export default function ContactForm() {
           onChange={handleWhatsappChange}
           placeholder="(12) 99999-9999"
           maxLength={15}
-          className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--ink)] outline-none transition-colors focus:border-[color:var(--accent)]"
+          className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3.5 text-[color:var(--ink)] outline-none transition-all placeholder:text-[color:var(--ink-soft)]/60 focus:border-[color:var(--accent)] focus:shadow-[0_0_0_4px_var(--accent-soft)]"
         />
       </label>
 
-      <label className="flex flex-col gap-1 text-sm text-[color:var(--ink-soft)]">
-        Seu e-mail
+      <label className="group flex flex-col gap-1.5 text-sm text-[color:var(--ink-soft)]">
+        <span className="flex items-center gap-2 font-medium text-[color:var(--ink)]">
+          <Mail size={16} strokeWidth={1.8} aria-hidden="true" />
+          Seu e-mail <span className="font-normal text-[color:var(--ink-soft)]">(opcional)</span>
+        </span>
         <input
           type="email"
           name="email"
           autoComplete="email"
-          className="rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--ink)] outline-none transition-colors focus:border-[color:var(--accent)]"
+          className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3.5 text-[color:var(--ink)] outline-none transition-all placeholder:text-[color:var(--ink-soft)]/60 focus:border-[color:var(--accent)] focus:shadow-[0_0_0_4px_var(--accent-soft)]"
         />
       </label>
 
@@ -140,10 +147,15 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="rounded-full bg-[color:var(--accent)] px-4 py-3 font-medium text-white transition-transform hover:scale-[1.01] disabled:opacity-60"
+        className="group mt-1 inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--accent)] px-5 py-3.5 font-semibold text-white shadow-[var(--shadow-accent)] transition-all hover:-translate-y-0.5 hover:bg-[color:var(--accent-strong)] hover:shadow-[var(--shadow-lift)] disabled:cursor-wait disabled:opacity-60"
       >
-        {status === 'submitting' ? 'Enviando…' : 'Agendar minha sessão'}
+        {status === 'submitting' ? 'Preparando…' : 'Continuar pelo WhatsApp'}
+        <ArrowUpRight size={17} strokeWidth={2.2} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
       </button>
+      <p className="flex items-center justify-center gap-1.5 text-center text-xs text-[color:var(--ink-soft)]">
+        <MessageCircle size={14} aria-hidden="true" />
+        Seus dados serão enviados em uma mensagem privada.
+      </p>
     </form>
   );
 }

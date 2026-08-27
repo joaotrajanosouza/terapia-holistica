@@ -11,6 +11,7 @@ import WhatsappFab from '@components/WhatsappFab.astro';
 import ParallaxLayer from '@components/ParallaxLayer.astro';
 import { SITE, whatsappLink } from '@lib/site';
 import { faqJsonLd } from '@lib/seo';
+import { ArrowDown, ArrowUpRight, Check, HeartHandshake, MessageCircle, Sparkles } from 'lucide-react';
 
 const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
 const testimonials = (await getCollection('testimonials')).sort((a, b) => a.data.order - b.data.order);
@@ -32,10 +33,10 @@ const trustBadges = [
 
 // Diferenciais em formato "spec strip" (ícone + frase curta)
 const differentiators = [
-  { label: 'Escuta ativa, sem julgamentos' },
-  { label: 'Ferramentas aplicáveis no dia a dia' },
-  { label: 'Sessões adaptadas ao seu momento' },
-  { label: 'Acompanhamento entre encontros' },
+  { label: 'Escuta ativa, sem julgamentos', icon: HeartHandshake },
+  { label: 'Ferramentas aplicáveis no dia a dia', icon: Sparkles },
+  { label: 'Sessões adaptadas ao seu momento', icon: Check },
+  { label: 'Acompanhamento entre encontros', icon: MessageCircle },
 ];
 
 // Os 3 pilares do método, em blocos grandes (padrão inspirado no site de referência)
@@ -114,16 +115,17 @@ const processSteps = [
 
   <main>
     <!-- HERO: headline + bullets ao lado (padrão do site de referência) -->
-    <section id="hero" class="px-4 pb-10 pt-10 md:px-6 md:pb-16 md:pt-16">
+    <section id="hero" class="relative overflow-hidden px-4 pb-12 pt-8 md:px-6 md:pb-20 md:pt-16">
+      <div class="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-[color:var(--accent-soft)]/70 blur-3xl" aria-hidden="true"></div>
       <div class="mx-auto max-w-6xl">
         <div class="grid gap-10 md:grid-cols-2 md:items-center md:gap-14">
-          <div class="order-2 md:order-1">
-            <span class="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1 text-xs font-medium text-[color:var(--ink-soft)]">
+          <div class="relative z-10 order-2 md:order-1">
+            <span class="inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/20 bg-[color:var(--accent-soft)] px-3 py-1.5 text-xs font-semibold text-[color:var(--accent)]">
               <span class="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]"></span>
               Sessões ao vivo, 100% online
             </span>
 
-            <h1 class="font-display mt-4 text-[2.5rem] font-semibold leading-[1.05] tracking-tight md:text-5xl">
+            <h1 class="font-display mt-5 max-w-xl text-[2.7rem] font-bold leading-[1.02] tracking-[-0.04em] md:text-6xl">
               Resgate seu equilíbrio interior e viva com mais leveza
             </h1>
 
@@ -133,37 +135,43 @@ const processSteps = [
             </p>
 
             <ul class="mt-6 flex flex-col gap-2.5 text-sm">
-              {differentiators.slice(0, 3).map((item) => (
+              {differentiators.slice(0, 3).map((item) => {
+                const Icon = item.icon;
+                return (
                 <li class="flex items-center gap-2.5 text-[color:var(--ink)]">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="shrink-0 text-[color:var(--accent)]" aria-hidden="true">
-                    <path d="M3 8.5l3 3 7-7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
+                  <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[color:var(--accent-soft)] text-[color:var(--accent)]">
+                    <Icon size={14} strokeWidth={2.2} aria-hidden="true" />
+                  </span>
                   {item.label}
                 </li>
-              ))}
+                );
+              })}
             </ul>
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#contato"
-                class="rounded-full bg-[color:var(--accent)] px-6 py-3 text-center text-sm font-medium text-white shadow-[var(--shadow-soft)] transition-transform hover:scale-[1.02]"
+                class="group inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--accent)] px-6 py-3.5 text-center text-sm font-semibold text-white shadow-[var(--shadow-accent)] transition-all hover:-translate-y-0.5 hover:bg-[color:var(--accent-strong)] hover:shadow-[var(--shadow-lift)]"
               >
                 Agendar minha sessão
+                <ArrowDown size={16} strokeWidth={2.2} className="transition-transform group-hover:translate-y-0.5" aria-hidden="true" />
               </a>
               <a
                 href={whatsappLink("Olá! Gostaria de saber mais sobre Terapia Holística.")}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="rounded-full border border-[color:var(--border)] px-6 py-3 text-center text-sm font-medium transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+                class="group inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-6 py-3.5 text-center text-sm font-semibold transition-all hover:-translate-y-0.5 hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
               >
+                <MessageCircle size={17} strokeWidth={1.9} aria-hidden="true" />
                 Falar no WhatsApp
+                <ArrowUpRight size={15} strokeWidth={2} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
               </a>
             </div>
           </div>
 
-          <div class="order-1 md:order-2">
-            <div class="relative">
-              <ParallaxLayer speed={0.12} scale class="rounded-3xl border border-[color:var(--border)]">
+          <div class="relative z-10 order-1 md:order-2">
+            <div class="hero-float relative">
+              <ParallaxLayer speed={0.12} scale class="story-card rounded-[2rem] border border-[color:var(--border)] bg-[color:var(--surface)] p-2 shadow-[var(--shadow-lift)]">
                 <img
                   src={SITE.images.hero}
                   alt="Ambiente acolhedor de terapia holística"
@@ -171,11 +179,12 @@ const processSteps = [
                   height="480"
                   loading="eager"
                   fetchpriority="high"
-                  class="aspect-[4/3] w-full object-cover"
+                  class="aspect-[4/3] w-full rounded-[1.5rem] object-cover"
                 />
               </ParallaxLayer>
-              <span class="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 rounded-full bg-[color:var(--surface)] px-3 py-1.5 text-xs font-medium shadow-[var(--shadow-soft)]">
-                🇧🇷 Atendimento em todo o Brasil
+              <span class="absolute bottom-5 left-5 z-10 flex items-center gap-2 rounded-full bg-[color:var(--surface)] px-3.5 py-2 text-xs font-semibold shadow-[var(--shadow-soft)]">
+                <span class="h-2 w-2 rounded-full bg-[#25D366]"></span>
+                Atendimento em todo o Brasil
               </span>
             </div>
           </div>
@@ -239,7 +248,10 @@ const processSteps = [
 
         <div class="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[color:var(--border)] bg-[color:var(--border)] sm:grid-cols-4">
           {differentiators.map((item) => (
-            <div class="bg-[color:var(--surface)] p-5">
+            <div class="group bg-[color:var(--surface)] p-5 transition-colors hover:bg-[color:var(--accent-soft)]">
+              <div class="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-[color:var(--accent-soft)] text-[color:var(--accent)]">
+                {(() => { const Icon = item.icon; return <Icon size={18} strokeWidth={1.8} aria-hidden="true" />; })()}
+              </div>
               <p class="text-sm font-medium leading-snug">{item.label}</p>
             </div>
           ))}
@@ -257,15 +269,13 @@ const processSteps = [
 
         <div class="mt-12 grid gap-8 md:grid-cols-3 md:gap-6">
           {pillars.map((pillar) => (
-            <div class="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7">
+            <div class="rounded-3xl border border-[color:var(--border)] bg-[color:var(--surface)] p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]">
               <h3 class="font-display text-xl font-semibold tracking-tight">{pillar.title}</h3>
               <p class="mt-2 text-sm text-[color:var(--ink-soft)]">{pillar.description}</p>
               <ul class="mt-5 flex flex-col gap-2.5 border-t border-[color:var(--border)] pt-5 text-sm">
                 {pillar.bullets.map((bullet) => (
                   <li class="flex items-start gap-2.5">
-                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" class="mt-0.5 shrink-0 text-[color:var(--accent)]" aria-hidden="true">
-                      <path d="M3 8.5l3 3 7-7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
+                    <Check size={15} strokeWidth={2.1} className="mt-0.5 shrink-0 text-[color:var(--accent)]" aria-hidden="true" />
                     {bullet}
                   </li>
                 ))}
@@ -288,11 +298,11 @@ const processSteps = [
         </div>
 
         <!-- TAGS DE PÚBLICO: pílulas, no lugar de "one system, adapted to your location" -->
-        <div class="mt-14 rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-alt)] p-7 md:p-8">
+          <div class="mt-14 rounded-3xl border border-[color:var(--border)] bg-[color:var(--bg-alt)] p-7 md:p-8">
           <p class="font-display text-sm font-semibold">Para quem é</p>
           <div class="mt-4 flex flex-wrap gap-2">
             {audienceTags.map((tag) => (
-              <span class="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3.5 py-1.5 text-sm text-[color:var(--ink-soft)]">
+              <span class="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-3.5 py-1.5 text-sm text-[color:var(--ink-soft)] transition-all hover:-translate-y-0.5 hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]">
                 {tag}
               </span>
             ))}

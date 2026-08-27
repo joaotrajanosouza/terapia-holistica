@@ -16,9 +16,9 @@
   --ink: #171A16;
   --ink-soft: #5B6259;
   --accent: #3F6656;
-  --accent-strong: #26382F;
-  --accent-soft: #E4EAE2;
-  --terracotta: #BE6A44;
+  --accent-strong: #28473A;
+  --accent-soft: #E2EEE7;
+  --terracotta: #C76B45;
   --border: #E2DFD3;
   --danger: #A8432B;
   --dark-bg: #151813;
@@ -26,6 +26,7 @@
   --dark-ink-soft: #A7ADA2;
   --shadow-soft: 0 1px 2px rgba(23, 26, 22, 0.05);
   --shadow-lift: 0 20px 48px -16px rgba(23, 26, 22, 0.16);
+  --shadow-accent: 0 10px 24px -10px rgba(63, 102, 86, 0.6);
 }
 
 html {
@@ -36,6 +37,7 @@ html {
 body {
   background: var(--bg);
   color: var(--ink);
+  overflow-x: hidden;
 }
 
 h1, h2, h3, .font-display {
@@ -54,6 +56,9 @@ h1, h2, h3, .font-display {
     transform: none !important;
     will-change: auto;
   }
+  .hero-float {
+    animation: none;
+  }
 }
 
 :focus-visible {
@@ -70,6 +75,38 @@ h1, h2, h3, .font-display {
 .reveal.is-visible {
   opacity: 1;
   transform: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: white;
+}
+
+@keyframes float-in {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.hero-float {
+  animation: float-in 5s ease-in-out infinite;
+}
+
+.story-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.story-card::after {
+  content: '';
+  position: absolute;
+  inset: auto -20% -55% 30%;
+  height: 10rem;
+  border-radius: 9999px;
+  background: var(--accent-soft);
+  opacity: 0.55;
+  filter: blur(1px);
+  transform: rotate(-12deg);
+  pointer-events: none;
 }
 
 .nav-indicator {
@@ -91,6 +128,10 @@ h1, h2, h3, .font-display {
 }
 .trust-track {
   animation: scroll-x 28s linear infinite;
+}
+
+.trust-track:hover {
+  animation-play-state: paused;
 }
 
 /* Anel suave ao redor do retrato — assinatura discreta, sem neon */

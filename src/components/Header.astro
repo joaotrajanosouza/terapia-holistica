@@ -1,5 +1,6 @@
 ---
 import { SITE, whatsappLink } from '@lib/site';
+import { ArrowUpRight, Menu, MessageCircle, X } from 'lucide-react';
 
 const nav = [
   { label: 'Início', href: '/#hero', id: 'hero' },
@@ -46,9 +47,10 @@ const nav = [
         href={whatsappLink()}
         target="_blank"
         rel="noopener noreferrer"
-        class="hidden rounded-full bg-[color:var(--accent)] px-4 py-2 text-sm font-medium text-white transition-transform hover:scale-[1.03] md:inline-block"
+        class="group hidden items-center gap-1.5 rounded-full bg-[color:var(--accent)] px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-soft)] transition-all hover:-translate-y-0.5 hover:bg-[color:var(--accent-strong)] hover:shadow-[var(--shadow-accent)] md:inline-flex"
       >
         Agendar sessão
+        <ArrowUpRight size={15} strokeWidth={2.2} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
       </a>
 
       <button
@@ -57,14 +59,10 @@ const nav = [
         aria-expanded="false"
         aria-controls="mobile-nav"
         aria-label="Abrir menu"
-        class="flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--border)] text-[color:var(--ink)] md:hidden"
+        class="flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--ink)] shadow-[var(--shadow-soft)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] md:hidden"
       >
-        <svg id="icon-open" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <path d="M1 4h16M1 9h16M1 14h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-        </svg>
-        <svg id="icon-close" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" class="hidden">
-          <path d="M2 2l14 14M16 2L2 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
-        </svg>
+        <Menu id="icon-open" size={20} strokeWidth={1.8} aria-hidden="true" />
+        <X id="icon-close" size={20} strokeWidth={1.8} aria-hidden="true" className="hidden" />
       </button>
     </div>
   </div>
@@ -77,22 +75,25 @@ const nav = [
 <nav
   id="mobile-nav"
   aria-label="Navegação mobile"
-  class="fixed inset-y-0 right-0 z-50 flex w-[78%] max-w-xs translate-x-full flex-col gap-1 bg-[color:var(--surface)] px-5 pb-6 pt-24 shadow-[var(--shadow-lift)] transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden"
+   class="fixed inset-y-0 right-0 z-50 flex w-[86%] max-w-sm translate-x-full flex-col gap-1 bg-[color:var(--surface)] px-5 pb-6 pt-24 shadow-[var(--shadow-lift)] transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden"
 >
+  <p class="mb-4 px-3 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">Navegar</p>
   {nav.map((item) => (
     <a
       href={item.href}
-      class="rounded-xl px-3 py-3 font-medium text-[color:var(--ink)] transition-colors hover:bg-[color:var(--accent-soft)] hover:text-[color:var(--accent)]"
+      class="group flex items-center justify-between rounded-2xl px-3 py-3.5 font-medium text-[color:var(--ink)] transition-all hover:translate-x-1 hover:bg-[color:var(--accent-soft)] hover:text-[color:var(--accent)]"
     >
       {item.label}
+      <ArrowUpRight size={16} strokeWidth={1.8} className="opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true" />
     </a>
   ))}
   <a
     href={whatsappLink()}
     target="_blank"
     rel="noopener noreferrer"
-    class="mt-4 rounded-full bg-[color:var(--accent)] px-4 py-3 text-center text-sm font-medium text-white"
+    class="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--accent)] px-4 py-3.5 text-center text-sm font-semibold text-white shadow-[var(--shadow-accent)]"
   >
+    <MessageCircle size={17} strokeWidth={2} aria-hidden="true" />
     Agendar sessão
   </a>
 </nav>
